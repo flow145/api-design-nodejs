@@ -40,8 +40,8 @@ try {
   throw error
 }
 
-export const isProd = () => env.APP_STAGE === 'production'
-export const isDev = () => env.APP_STAGE === 'dev'
-export const isTest = () => env.APP_STAGE === 'test'
+export const isProdEnv = () => env.APP_STAGE === 'production'
+export const isDevEnv = () => env.APP_STAGE === 'dev'
+export const isTestEnv = () => env.APP_STAGE === 'test'
 
 export { env }

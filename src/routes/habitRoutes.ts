@@ -1,6 +1,9 @@
 import { Router } from 'express'
+import { authenticateToken } from '../middleware/auth.ts'
 
 export const habitRouter = Router()
+
+habitRouter.use(authenticateToken)
 
 habitRouter.get('/', (_req, res) => {
   res.json({ message: 'Habits' })

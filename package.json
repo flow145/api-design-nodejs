@@ -4,6 +4,9 @@
   "description": "Habit Tracker API for Node.js course",
   "main": "src/index.ts",
   "type": "module",
+  "engines": {
+    "node": ">=24.3.0"
+  },
   "homepage": "https://github.com/flow145/api-design-nodejs#readme",
   "bugs": "https://github.com/flow145/api-design-nodejs/issues",
   "repository": "git@github.com:flow145/api-design-nodejs.git",

@@ -3,6 +3,7 @@ import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import { isTestEnv } from '../env.ts'
+import { errorHandler } from './middleware/errorHandler.ts'
 import { authRouter } from './routes/authRoutes.ts'
 import { habitRouter } from './routes/habitRoutes.ts'
 import { userRouter } from './routes/userRoutes.ts'
@@ -26,3 +27,5 @@ app.get('/health', (_req, res) => {
 app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/habits', habitRouter)
+
+app.use(errorHandler)

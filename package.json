@@ -20,7 +20,7 @@
     "check": "biome check --reporter=summary",
     "check:fix": "pnpm check --write",
     "typecheck": "tsc",
-    "test": "vitest run",
+    "test": "cross-env APP_STAGE=test vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },

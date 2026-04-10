@@ -61,9 +61,9 @@ export const userRelations = relations(users, ({ many }) => ({
 }))
 
 export const habitsRelations = relations(habits, ({ one, many }) => ({
-  users: one(users, { fields: [habits.userId], references: [users.id] }),
+  user: one(users, { fields: [habits.userId], references: [users.id] }),
   entries: many(entries),
-  tags: many(habitTags),
+  habitTags: many(habitTags),
 }))
 
 export const entriesRelations = relations(entries, ({ one }) => ({
@@ -75,8 +75,8 @@ export const tagsRelations = relations(tags, ({ many }) => ({
 }))
 
 export const habitTagsRelations = relations(habitTags, ({ one }) => ({
-  habits: one(habits, { fields: [habitTags.habitId], references: [habits.id] }),
-  tags: one(tags, { fields: [habitTags.tagId], references: [tags.id] }),
+  habit: one(habits, { fields: [habitTags.habitId], references: [habits.id] }),
+  tag: one(tags, { fields: [habitTags.tagId], references: [tags.id] }),
 }))
 
 export type User = typeof users.$inferSelect

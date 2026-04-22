@@ -96,9 +96,10 @@ export type NewHabitTag = typeof habitTags.$inferInsert
 
 export const insertUserSchema = createInsertSchema(users)
 export const selectUserSchema = createSelectSchema(users)
-export const insertHabitSchema = createInsertSchema(habits)
 
+export const insertHabitSchema = createInsertSchema(habits)
 export const selectHabitSchema = createSelectSchema(habits)
+
 export const insertEntrySchema = createInsertSchema(entries)
 export const selectEntrySchema = createSelectSchema(entries)
 

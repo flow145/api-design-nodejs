@@ -8,10 +8,10 @@ export interface AuthenticatedUser extends JWTPayload {
   username: string
 }
 
-export const generateToken = (payload: AuthenticatedUser) => {
+export const generateToken = async (payload: AuthenticatedUser) => {
   const secretKey = createSecretKey(env.JWT_SECRET, 'utf-8')
 
-  return new SignJWT(payload)
+  return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(env.JWT_EXPIRES_IN)

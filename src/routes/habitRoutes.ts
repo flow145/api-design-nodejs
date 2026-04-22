@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import z from 'zod'
+import { z } from 'zod'
 import { createHabit, getUserHabits, updateHabit } from '../controllers/habitController.ts'
 import { authenticateToken } from '../middleware/auth.ts'
 import { validateBody } from '../middleware/validation.ts'
@@ -12,24 +12,42 @@ const createHabitSchema = z.object({
   tagIds: z.array(z.string()).optional(),
 })
 
-export const habitRouter = Router()
+export const habitsRouter = Router()
 
-habitRouter.use(authenticateToken)
+habitsRouter.use(authenticateToken)
 
-habitRouter.get('/', getUserHabits)
+habitsRouter.get('/', getUserHabits)
 
-habitRouter.get('/:id', (_req, res) => {
+habitsRouter.get('/:id', (_req, res) => {
+  // TODO implement
   res.json({ message: 'Got 1 habit' })
 })
 
-habitRouter.post('/', validateBody(createHabitSchema), createHabit)
+habitsRouter.post('/', validateBody(createHabitSchema), createHabit)
 
-habitRouter.patch('/:id', updateHabit)
+habitsRouter.patch('/:id', updateHabit)
 
-habitRouter.delete('/:id', (_req, res) => {
+habitsRouter.delete('/:id', (_req, res) => {
+  // TODO implement
   res.json({ message: 'Deleted habit' })
 })
 
-habitRouter.post('/:id/complete', (_req, res) => {
+habitsRouter.post('/:id/complete', (_req, res) => {
+  // TODO implement
   res.status(201).json({ message: 'Completed habit' })
+})
+
+habitsRouter.get('/tag/:tagId', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'Got habits by tag' })
+})
+
+habitsRouter.post('/:id/tags', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'Added tags to habit' })
+})
+
+habitsRouter.delete('/:id/tags/:tagId', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'Removed tag from habit' })
 })

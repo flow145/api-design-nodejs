@@ -1,22 +1,21 @@
 import { Router } from 'express'
 import { authenticateToken } from '../middleware/auth.ts'
 
-export const userRouter = Router()
+export const usersRouter = Router()
 
-userRouter.use(authenticateToken)
+usersRouter.use(authenticateToken)
 
-userRouter.get('/', (_req, res) => {
-  res.json({ message: 'Users' })
+usersRouter.get('/profile', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'User profile' })
 })
 
-userRouter.get('/:id', (_req, res) => {
-  res.json({ message: 'Got user' })
+usersRouter.patch('/profile', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'Updated user profile' })
 })
 
-userRouter.put('/:id', (_req, res) => {
-  res.json({ message: 'User updated' })
-})
-
-userRouter.delete('/:id', (_req, res) => {
-  res.json({ message: 'User deleted' })
+usersRouter.put('/password', (_req, res) => {
+  // TODO implement
+  res.json({ message: 'Updated user password' })
 })

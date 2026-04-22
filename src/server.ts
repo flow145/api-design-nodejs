@@ -5,8 +5,8 @@ import morgan from 'morgan'
 import { isTestEnv } from '../env.ts'
 import { errorHandler } from './middleware/errorHandler.ts'
 import { authRouter } from './routes/authRoutes.ts'
-import { habitRouter } from './routes/habitRoutes.ts'
-import { userRouter } from './routes/userRoutes.ts'
+import { habitsRouter } from './routes/habitRoutes.ts'
+import { usersRouter } from './routes/userRoutes.ts'
 
 export const app = express()
 
@@ -25,7 +25,7 @@ app.get('/health', (_req, res) => {
 })
 
 app.use('/api/auth', authRouter)
-app.use('/api/users', userRouter)
-app.use('/api/habits', habitRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/habits', habitsRouter)
 
 app.use(errorHandler)

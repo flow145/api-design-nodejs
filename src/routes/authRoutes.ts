@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import z from 'zod'
+import { z } from 'zod'
 import { login, register } from '../controllers/authController.ts'
 import { insertUserSchema } from '../db/schema.ts'
 import { validateBody } from '../middleware/validation.ts'

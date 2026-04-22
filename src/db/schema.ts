@@ -56,7 +56,7 @@ export const habitTags = pgTable('habit_tags', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
-export const userRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many }) => ({
   habits: many(habits),
 }))
 
@@ -81,11 +81,29 @@ export const habitTagsRelations = relations(habitTags, ({ one }) => ({
 
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
+
 export type Habit = typeof habits.$inferSelect
 export type NewHabit = typeof habits.$inferInsert
+
 export type Entry = typeof entries.$inferSelect
+export type NewEntry = typeof entries.$inferInsert
+
 export type Tag = typeof tags.$inferSelect
+export type NewTag = typeof tags.$inferInsert
+
 export type HabitTag = typeof habitTags.$inferSelect
+export type NewHabitTag = typeof habitTags.$inferInsert
 
 export const insertUserSchema = createInsertSchema(users)
 export const selectUserSchema = createSelectSchema(users)
+export const insertHabitSchema = createInsertSchema(habits)
+
+export const selectHabitSchema = createSelectSchema(habits)
+export const insertEntrySchema = createInsertSchema(entries)
+export const selectEntrySchema = createSelectSchema(entries)
+
+export const insertTagSchema = createInsertSchema(tags)
+export const selectTagSchema = createSelectSchema(tags)
+
+export const insertHabitTagSchema = createInsertSchema(habitTags)
+export const selectHabitTagSchema = createSelectSchema(habitTags)

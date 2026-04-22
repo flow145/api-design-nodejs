@@ -11,7 +11,7 @@ export const createHabit = async (req: AuthenticatedRequest, res: Response) => {
       const [newHabit] = await tx
         .insert(habits)
         .values({
-          userId: req.user.id,
+          userId: req.user!.id,
           name,
           description,
           frequency,
@@ -41,7 +41,7 @@ export const createHabit = async (req: AuthenticatedRequest, res: Response) => {
 export const getUserHabits = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userHabitsWithTags = await db.query.habits.findMany({
-      where: eq(habits.userId, req.user.id),
+      where: eq(habits.userId, req.user!.id),
       with: {
         habitTags: {
           with: { tag: true },
@@ -73,7 +73,7 @@ export const updateHabit = async (req: AuthenticatedRequest, res: Response) => {
       const [updatedHabit] = await tx
         .update(habits)
         .set({ ...updates, updatedAt: new Date() })
-        .where(and(eq(habits.id, id), eq(habits.userId, req.user.id)))
+        .where(and(eq(habits.id, id), eq(habits.userId, req.user!.id)))
         .returning()
 
       if (!updateHabit) res.status(401).end()
@@ -91,7 +91,7 @@ export const updateHabit = async (req: AuthenticatedRequest, res: Response) => {
         }
       }
 
-      return updateHabit
+      return updatedHabit
     })
 
     res.json({ message: 'Habit was updated', habit: result })

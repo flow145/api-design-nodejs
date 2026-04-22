@@ -9,7 +9,7 @@ export const validateBody =
       next()
     } catch (error) {
       if (error instanceof ZodError)
-        return res.status(400).json({
+        return res.status(422).json({
           error: 'Validation failed',
           details: error.issues.map(({ path, message }) => ({ field: path.join('.'), message })),
         })
@@ -25,7 +25,7 @@ export const validateParams =
       next()
     } catch (error) {
       if (error instanceof ZodError)
-        return res.status(400).json({
+        return res.status(422).json({
           error: 'Invalid params',
           details: error.issues.map(({ path, message }) => ({ field: path.join('.'), message })),
         })
@@ -41,7 +41,7 @@ export const validateqQuery =
       next()
     } catch (error) {
       if (error instanceof ZodError)
-        return res.status(400).json({
+        return res.status(422).json({
           error: 'Invalid query params',
           details: error.issues.map(({ path, message }) => ({ field: path.join('.'), message })),
         })

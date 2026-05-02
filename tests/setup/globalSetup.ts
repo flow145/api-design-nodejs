@@ -4,17 +4,16 @@ import { db } from '../../src/db/connection.ts'
 import { entries, habits, habitTags, tags, users } from '../../src/db/schema.ts'
 
 export default async function setup() {
-  console.log('Setting up the test database')
+  console.log('🗄️ Setting up test database...')
 
   try {
-    // example wit sql:
     await db.execute(sql`DROP TABLE IF EXISTS ${entries} CASCADE`)
     await db.execute(sql`DROP TABLE IF EXISTS ${habits} CASCADE`)
     await db.execute(sql`DROP TABLE IF EXISTS ${users} CASCADE`)
     await db.execute(sql`DROP TABLE IF EXISTS ${tags} CASCADE`)
     await db.execute(sql`DROP TABLE IF EXISTS ${habitTags} CASCADE`)
 
-    console.log('🚀 Pushing schema using drizzle-kit')
+    console.log('🚀 Pushing schema using drizzle-kit...')
     execSync(
       `pnpm drizzle-kit push --url="${process.env.DATABASE_URL}" --schema="src/db/schema.ts" --dialect="postgresql"`,
       {
@@ -23,22 +22,26 @@ export default async function setup() {
       },
     )
 
-    console.log('✅ Test db created')
+    console.log('✅ Test database setup complete')
   } catch (error) {
-    console.error('❌ Failed to setup test db', error)
+    console.error('❌ Failed to setup test database', error)
     throw error
   }
 
   return async () => {
+    console.log('🧹 Tearing down test database...')
+
     try {
       await db.execute(sql`DROP TABLE IF EXISTS ${entries} CASCADE`)
       await db.execute(sql`DROP TABLE IF EXISTS ${habits} CASCADE`)
       await db.execute(sql`DROP TABLE IF EXISTS ${users} CASCADE`)
       await db.execute(sql`DROP TABLE IF EXISTS ${tags} CASCADE`)
       await db.execute(sql`DROP TABLE IF EXISTS ${habitTags} CASCADE`)
+
+      console.log('✅ Test database teardown complete')
       process.exit(0)
     } catch (error) {
-      console.error('❌ Failed to clean up test db', error)
+      console.error('❌ Failed to teardown test database:', error)
       throw error
     }
   }

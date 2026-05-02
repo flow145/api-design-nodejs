@@ -1,7 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm'
 import type { Response } from 'express'
 import { db } from '../db/connection.ts'
-import { habits, habitTags, type NewHabit } from '../db/schema.ts'
+import { entries, habits, habitTags, type NewHabit } from '../db/schema.ts'
 import type { AuthenticatedRequest } from '../middleware/auth.ts'
 
 interface NewHabitBody
@@ -30,18 +30,14 @@ export const createHabit = async (
         .returning()
 
       if (tagIds && tagIds.length > 0) {
-        const habitTagValues = tagIds.map((tagId) => ({
-          habitId: newHabit.id,
-          tagId,
-        }))
-
+        const habitTagValues = tagIds.map((tagId) => ({ habitId: newHabit.id, tagId }))
         await tx.insert(habitTags).values(habitTagValues)
       }
 
       return newHabit
     })
 
-    res.status(201).json({ message: 'Habit created', habit: result })
+    res.status(201).json({ message: 'Habit created successfully', habit: result })
   } catch (error) {
     console.error('Create habit error', error)
     res.status(500).json({ error: 'Failed to create habit' })
@@ -74,12 +70,43 @@ export const getUserHabits = async (req: AuthenticatedRequest, res: Response) =>
   }
 }
 
+export const getHabit = async (req: AuthenticatedRequest<{ id: string }>, res: Response) => {
+  try {
+    const { id } = req.params
+    const habit = await db.query.habits.findFirst({
+      where: eq(habits.id, id),
+      with: {
+        habitTags: {
+          with: { tag: true },
+        },
+        entries: {
+          orderBy: [desc(entries.completionDate)],
+          limit: 10,
+        },
+      },
+    })
+
+    if (!habit) return res.status(404).json({ error: 'Habit not found' })
+
+    const habitWithTags = {
+      ...habit,
+      tags: habit.habitTags.map((ht) => ht.tag),
+      habitTags: undefined,
+    }
+
+    res.json({ habit: habitWithTags })
+  } catch (error) {
+    console.error('Get habit error', error)
+    res.status(500).json({ error: 'Failed to fetch habit' })
+  }
+}
+
 export const updateHabit = async (
   req: AuthenticatedRequest<{ id: string }, unknown, UpdateHabitBody>,
   res: Response,
 ) => {
   try {
-    const id = req.params.id
+    const { id } = req.params
     const { tagIds, ...updates } = req.body
 
     const result = await db.transaction(async (tx) => {
@@ -89,17 +116,13 @@ export const updateHabit = async (
         .where(and(eq(habits.id, id), eq(habits.userId, req.user!.id)))
         .returning()
 
-      if (!updateHabit) res.status(401).end()
+      if (!updateHabit) return res.status(404).json({ error: 'Habit not found' })
 
       if (tagIds !== undefined) {
         await tx.delete(habitTags).where(eq(habitTags.habitId, id))
 
         if (tagIds.length > 0) {
-          const habitTagValues = tagIds.map((tagId) => ({
-            habitId: id,
-            tagId,
-          }))
-
+          const habitTagValues = tagIds.map((tagId) => ({ habitId: id, tagId }))
           await tx.insert(habitTags).values(habitTagValues)
         }
       }
@@ -107,9 +130,26 @@ export const updateHabit = async (
       return updatedHabit
     })
 
-    res.json({ message: 'Habit was updated', habit: result })
+    res.json({ message: 'Habit updated successfully', habit: result })
   } catch (error) {
     console.error('Update habit error', error)
     res.status(500).json({ error: 'Failed to update habit' })
+  }
+}
+
+export const deleteHabit = async (req: AuthenticatedRequest<{ id: string }>, res: Response) => {
+  try {
+    const { id } = req.params
+    const [deletedHabit] = await db
+      .delete(habits)
+      .where(and(eq(habits.id, id), eq(habits.userId, req.user!.id)))
+      .returning()
+
+    if (!deletedHabit) return res.status(404).json({ error: 'Habit not found' })
+
+    res.status(204).json({ message: 'Habit deleted successfully' })
+  } catch (error) {
+    console.error('Delete habit error:', error)
+    res.status(500).json({ error: 'Failed to delete habit' })
   }
 }

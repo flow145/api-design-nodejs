@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { createHabit, getUserHabits, updateHabit } from '../controllers/habitController.ts'
+import {
+  createHabit,
+  deleteHabit,
+  getHabit,
+  getUserHabits,
+  updateHabit,
+} from '../controllers/habitController.ts'
 import { authenticateToken } from '../middleware/auth.ts'
 import { validateBody } from '../middleware/validation.ts'
 
@@ -16,21 +22,13 @@ export const habitsRouter = Router()
 
 habitsRouter.use(authenticateToken)
 
+// TODO validation
+
 habitsRouter.get('/', getUserHabits)
-
-habitsRouter.get('/:id', (_req, res) => {
-  // TODO implement
-  res.json({ message: 'Got 1 habit' })
-})
-
+habitsRouter.get('/:id', getHabit)
 habitsRouter.post('/', validateBody(createHabitSchema), createHabit)
-
 habitsRouter.patch('/:id', updateHabit)
-
-habitsRouter.delete('/:id', (_req, res) => {
-  // TODO implement
-  res.json({ message: 'Deleted habit' })
-})
+habitsRouter.delete('/:id', deleteHabit)
 
 habitsRouter.post('/:id/complete', (_req, res) => {
   // TODO implement

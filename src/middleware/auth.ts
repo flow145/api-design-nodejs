@@ -1,7 +1,13 @@
 import type { NextFunction, Request, Response } from 'express'
 import { type AuthenticatedUser, verifyToken } from '../utils/jwt.ts'
 
-export interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest<
+  Params = Record<string, string>,
+  ResBody = unknown,
+  ReqBody = unknown,
+  ReqQuery = Record<string, unknown>,
+  Locals extends Record<string, unknown> = Record<string, unknown>,
+> extends Request<Params, ResBody, ReqBody, ReqQuery, Locals> {
   user?: AuthenticatedUser
 }
 

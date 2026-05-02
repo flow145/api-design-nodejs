@@ -21,7 +21,7 @@ export const habits = pgTable('habits', {
   name: varchar('name', { length: 100 }).notNull(),
   description: text('description'),
   frequency: varchar('frequency', { length: 20 }).notNull(),
-  targetCounts: integer('target_counts').default(1),
+  targetCount: integer('target_counts').default(1),
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

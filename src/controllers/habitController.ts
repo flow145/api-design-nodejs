@@ -1,10 +1,20 @@
 import { and, desc, eq } from 'drizzle-orm'
 import type { Response } from 'express'
 import { db } from '../db/connection.ts'
-import { habits, habitTags } from '../db/schema.ts'
+import { habits, habitTags, type NewHabit } from '../db/schema.ts'
 import type { AuthenticatedRequest } from '../middleware/auth.ts'
 
-export const createHabit = async (req: AuthenticatedRequest, res: Response) => {
+interface NewHabitBody
+  extends Pick<NewHabit, 'name' | 'description' | 'frequency' | 'targetCount' | 'isActive'> {
+  tagIds?: string[]
+}
+
+interface UpdateHabitBody extends Partial<NewHabitBody> {}
+
+export const createHabit = async (
+  req: AuthenticatedRequest<unknown, unknown, NewHabitBody>,
+  res: Response,
+) => {
   try {
     const { name, description, frequency, targetCount, tagIds } = req.body
     const result = await db.transaction(async (tx) => {
@@ -64,7 +74,10 @@ export const getUserHabits = async (req: AuthenticatedRequest, res: Response) =>
   }
 }
 
-export const updateHabit = async (req: AuthenticatedRequest, res: Response) => {
+export const updateHabit = async (
+  req: AuthenticatedRequest<{ id: string }, unknown, UpdateHabitBody>,
+  res: Response,
+) => {
   try {
     const id = req.params.id
     const { tagIds, ...updates } = req.body
@@ -81,7 +94,7 @@ export const updateHabit = async (req: AuthenticatedRequest, res: Response) => {
       if (tagIds !== undefined) {
         await tx.delete(habitTags).where(eq(habitTags.habitId, id))
 
-        if (tagIds.lenght > 0) {
+        if (tagIds.length > 0) {
           const habitTagValues = tagIds.map((tagId) => ({
             habitId: id,
             tagId,

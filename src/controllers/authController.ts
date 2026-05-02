@@ -47,7 +47,7 @@ export const login = async (req: Request<unknown, unknown, LoginBody>, res: Resp
     const isValidPassword = await comparePasswords(password, user.password)
 
     // TODO limit number or retries
-    if (!isValidPassword) res.status(401).json({ error: 'Invalid credentials' })
+    if (!isValidPassword) return res.status(401).json({ error: 'Invalid credentials' })
 
     const token = await generateToken({ id: user.id, email: user.email, username: user.username })
 

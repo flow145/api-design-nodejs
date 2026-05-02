@@ -51,7 +51,7 @@ export const login = async (req: Request<unknown, unknown, LoginBody>, res: Resp
 
     const token = await generateToken({ id: user.id, email: user.email, username: user.username })
 
-    res.status(201).json({
+    res.json({
       message: 'Login successful',
       user: {
         id: user.id,

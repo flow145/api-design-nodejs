@@ -1,5 +1,4 @@
 import request from 'supertest'
-import { env } from '../env.ts'
 import { app } from '../src/server.ts'
 import { cleanupDatabase, createTestUser } from './setup/dbHelpers.ts'
 
@@ -17,6 +16,7 @@ describe('Authentication endpoints', () => {
       }
 
       const res = await request(app).post('/api/auth/register').send(userData).expect(201)
+
       expect(res.body).toHaveProperty('user')
       expect(res.body).toHaveProperty('token')
       expect(res.body.user).not.toHaveProperty('password')
@@ -29,6 +29,7 @@ describe('Authentication endpoints', () => {
       const credentials = { email: testUser.user.email, password: testUser.rawPassword }
 
       const res = await request(app).post('/api/auth/login').send(credentials).expect(200)
+
       expect(res.body).toHaveProperty('message')
       expect(res.body).toHaveProperty('user')
       expect(res.body).toHaveProperty('token')

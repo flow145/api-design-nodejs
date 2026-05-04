@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      MAINTENANCE_DATABASE: postgres
+    volumes:
+      - api_design_postgres_data:/var/lib/postgresql
+      - ./scripts/create-databases.sh:/docker-entrypoint-initdb.d/10-create-databases.sh:ro
+
+volumes:
+  api_design_postgres_data:

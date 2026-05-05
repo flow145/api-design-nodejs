@@ -34,7 +34,7 @@ export const validateParams =
     }
   }
 
-export const validateqQuery =
+export const validateQuery =
   (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse(req.query)

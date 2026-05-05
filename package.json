@@ -13,6 +13,8 @@
   "scripts": {
     "dev": "node --watch src/index.ts",
     "start": "node src/index.ts",
+    "db:up": "docker compose --env-file .env.development up -d --wait db",
+    "db:down": "docker compose --env-file .env.development down db",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",

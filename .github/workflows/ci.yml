@@ -50,7 +50,11 @@ jobs:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
       DATABASE_MAINTENANCE: postgres
+      DATABASE_NAME: habit_tracker_test
       DATABASE_PORT: 5432
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@localhost:${DATABASE_PORT}/${DATABASE_NAME}
+      JWT_SECRET: s8I3B/EuEjLoUDo+NxGkE05FBiu9HFiHVnUHkAzUlqE=
+      REFRESH_TOKEN_SECRET: ii/iDBp/9bTptV7teXNFLNR+RARDXVEJIHGbQPnm6dI=
     steps:
       - name: Checkout
         uses: actions/checkout@v6

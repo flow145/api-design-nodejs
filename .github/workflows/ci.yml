@@ -46,6 +46,11 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_MAINTENANCE: postgres
+      DATABASE_PORT: 5432
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -60,19 +65,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-      
+
       - name: Install
         run: pnpm install
 
       - name: Start database
-        run: pnpm db:up
+        run: docker compose up -d --wait db
 
       - name: Test
         run: pnpm test
 
       - name: Cleanup
         if: always()
-        run: pnpm db:down
+        run: docker compose down -v
 
   build:
     name: Build

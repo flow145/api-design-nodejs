@@ -8,9 +8,13 @@ import {
   updateHabit,
 } from '../controllers/habitController.ts'
 import { authenticateToken } from '../middleware/auth.ts'
-import { validateBody } from '../middleware/validation.ts'
+import { validateBody, validateParams } from '../middleware/validation.ts'
 
-const createHabitSchema = z.object({
+const habitParamsSchema = z.object({
+  id: z.uuidv4(),
+})
+
+const createHabitBodySchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   frequency: z.string(),
@@ -18,17 +22,29 @@ const createHabitSchema = z.object({
   tagIds: z.array(z.string()).optional(),
 })
 
+const updateHabitBodySchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  frequency: z.string().optional(),
+  targetCount: z.number().optional(),
+  isActive: z.boolean().optional(),
+  tagIds: z.array(z.string()).optional(),
+})
+
 export const habitsRouter = Router()
 
 habitsRouter.use(authenticateToken)
 
-// TODO validation
-
 habitsRouter.get('/', getUserHabits)
-habitsRouter.get('/:id', getHabit)
-habitsRouter.post('/', validateBody(createHabitSchema), createHabit)
-habitsRouter.patch('/:id', updateHabit)
-habitsRouter.delete('/:id', deleteHabit)
+habitsRouter.get('/:id', validateParams(habitParamsSchema), getHabit)
+habitsRouter.post('/', validateBody(createHabitBodySchema), createHabit)
+habitsRouter.patch(
+  '/:id',
+  validateParams(habitParamsSchema),
+  validateBody(updateHabitBodySchema),
+  updateHabit,
+)
+habitsRouter.delete('/:id', validateParams(habitParamsSchema), deleteHabit)
 
 habitsRouter.post('/:id/complete', (_req, res) => {
   // TODO implement

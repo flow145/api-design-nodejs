@@ -26,8 +26,8 @@
     "check:fix": "pnpm check --write",
     "typecheck": "tsc",
     "test": "cross-env APP_STAGE=test vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:watch": "cross-env APP_STAGE=test vitest",
+    "test:coverage": "cross-env APP_STAGE=test vitest run --coverage"
   },
   "dependencies": {
     "@epic-web/remember": "^1.1.0",

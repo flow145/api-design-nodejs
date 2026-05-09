@@ -116,7 +116,7 @@ export const updateHabit = async (
         .where(and(eq(habits.id, id), eq(habits.userId, req.user!.id)))
         .returning()
 
-      if (!updateHabit) return res.status(404).json({ error: 'Habit not found' })
+      if (!updatedHabit) return null
 
       if (tagIds !== undefined) {
         await tx.delete(habitTags).where(eq(habitTags.habitId, id))
@@ -130,6 +130,7 @@ export const updateHabit = async (
       return updatedHabit
     })
 
+    if (!result) return res.status(404).json({ error: 'Habit not found' })
     res.json({ message: 'Habit updated successfully', habit: result })
   } catch (error) {
     console.error('Update habit error', error)
@@ -147,7 +148,7 @@ export const deleteHabit = async (req: AuthenticatedRequest<{ id: string }>, res
 
     if (!deletedHabit) return res.status(404).json({ error: 'Habit not found' })
 
-    res.status(204).json({ message: 'Habit deleted successfully' })
+    res.status(204).send()
   } catch (error) {
     console.error('Delete habit error:', error)
     res.status(500).json({ error: 'Failed to delete habit' })

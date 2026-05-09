@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm'
 import { db } from '../../src/db/connection.ts'
 import {
   entries,
@@ -27,7 +28,7 @@ export const createTestUser = async (userData: Partial<NewUser> = {}) => {
     .values({ ...defaultData, password: hashedPassword })
     .returning()
 
-  const token = generateToken({ id: user.id, email: user.email, username: user.username })
+  const token = await generateToken({ id: user.id, email: user.email, username: user.username })
 
   return { token, user, rawPassword: defaultData.password }
 }
@@ -47,6 +48,10 @@ export const createHabit = async (userId: string, habitData: Partial<NewHabit> =
     .returning()
 
   return habit
+}
+
+export const deleteHabit = async (id: string) => {
+  return await db.delete(habits).where(eq(habits.id, id)).returning()
 }
 
 export const cleanupDatabase = async () => {
